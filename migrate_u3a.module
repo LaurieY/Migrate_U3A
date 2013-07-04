@@ -1,0 +1,68 @@
+<?php
+
+/**
+ * This is example code for a Drupal 6 to Drupal 7 migration. This won't actually
+ * work without defining the referenced vocabularies, content types, and fields
+ * on each side.
+ */
+
+/**
+ * Implements hook_flush_caches().
+ */
+function migrate_u3a_flush_caches() {
+  dpm("true", ' In u3a flush caches'); //LEY
+  migrate_u3a_register_migrations();
+}
+
+/**
+ * Register all D6->D7 migrations.
+ */
+function migrate_u3a_register_migrations() {
+  /**
+   * Each migration being registered takes an array of arguments, some required
+   * and some optional. Start with the common arguments required by all - the
+   * source_connection (connection key, set up in settings.php, pointing to
+   * the Drupal 6 database) and source_version (major version of Drupal).
+   */
+  $common_arguments = array(
+    'source_connection' => 'u3a_legacy',
+    'source_version' => 6,
+         'group_name' => 'u3a_group',
+  );
+
+
+   $role_arguments = $common_arguments + array(
+  'machine_name' => 'U3A_Role',
+  'description' => t('Import Drupal 6 roles'),
+ 'role_mappings' => array(
+    'Group Leader' => 'Group Leader',
+  ),
+);
+Migration::registerMigration('DrupalRole6Migration',
+  $role_arguments['machine_name'], $role_arguments);
+
+
+
+  // The description and the migration machine name are also required arguments,
+  // which will be unique for each migration you register.
+  $user_arguments = $common_arguments + array(
+    'description' => t('Migration of users from Drupal 6'),
+    'machine_name' => 'U3A_User',
+     'role_migration' => 'U3A_Role',
+  );
+
+  // We just use the migrate_d2d D6 migration class as-is.
+  Migration::registerMigration('DrupalUser6Migration', $user_arguments['machine_name'],
+                               $user_arguments);
+
+}
+
+/**
+ * Implements hook_migrate_api().
+ */
+function migrate_u3a_migrate_api() {
+  $api = array(
+    'api' => 2,
+  );
+  return $api;
+}

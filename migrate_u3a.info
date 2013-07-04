@@ -1,0 +1,19 @@
+name = "Migrate U3A"
+description = "Migrate content from U3A D6 site to U3A D7"
+;package = "Migrate Examples"
+core = 7.x
+;hidden = TRUE
+
+dependencies[] = migrate
+dependencies[] = migrate_ui
+dependencies[] = migrate_d2d
+
+;files[] = node.inc
+files[] = migrate_u3a.module
+
+; Information added by drupal.org packaging script on 2012-11-26
+version = "7.x-2.0"
+core = "7.x"
+;project = "U3A"
+datestamp = "1353952687"
+
